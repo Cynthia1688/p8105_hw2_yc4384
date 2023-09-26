@@ -1,0 +1,30 @@
+---
+title: "p8105_hw2_yc4384"
+author: "Yangyang Chen"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+```
+
+## Problem 1
+
+* Clean the data in pols-month.csv. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
+```{r}
+pols_df = 
+  read.csv("data/pols-month.csv") |> 
+  janitor::clean_names() |> 
+  separate(mon, into = c("year", "month", "day")) |> 
+  mutate(month = month.abb[as.numeric(month)]) |> 
+  mutate(president  = gov_dem) |> 
+  select(-c(prez_dem,prez_gop)) |> 
+  select(-day)
+```
+
