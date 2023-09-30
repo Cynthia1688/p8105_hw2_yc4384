@@ -93,7 +93,7 @@ pols_df |>
 
 * **unemploy_df** contains `r nrow(unemploy_df) - 1` observations and 'r ncol(unemploy_df)' variables, describing the percentage of unemployment in each month of the associated year.
 
-* **prob1_df** is the `r dim(prob1_df)[1]` * `r dim(prob1_df)[2]` dimention result dataset, which contains  `r nrow(prob1_df) - 1` observations and `r ncol(prob1_df) - 1` variables. It ranges from `r range(prob1_df$year)[1]` to  `r range(prob1_df$year)[2]`. It's variable conbined all key variables in **`pols_df`**, **snp_df** and **unemploy_df** datasets. including `r colnames(prob1_df)`. 
+* **prob1_df** is the `r dim(prob1_df)[1]` * `r dim(prob1_df)[2]` dimention result dataset, which contains  `r nrow(prob1_df) - 1` observations and `r ncol(prob1_df) - 1` variables. It ranges from `r range(prob1_df$year)[1]` to  `r range(prob1_df$year)[2]`. It's variable conbined all key variables in **`pols_df`**, **snp_df** and **unemploy_df** datasets. including *`r colnames(prob1_df)`.* 
 
 
 ## Problem 2
@@ -119,32 +119,6 @@ trash_df =
   mutate(homes_powered_new = weight_tons*500/30) 
 ```
 
-Function to clean inconsistent date format:
-
-```{r}
-# clean_date =
-#   function(date_string) {
-#   # Try to parse as Date using various formats
-#   date <- try(as.Date(date_string, format = "%Y/%m/%d"), silent = TRUE)
-#   if (inherits(date, "Date")) {
-#     return(date)
-#   } else {
-#     # Try other date formats
-#     date <- try(as.Date(date_string, format = "%m/%d/%Y"), silent = TRUE)
-#   if (inherits(date, "Date")) {
-#       return(date)
-#     } else {
-#       # Add more format attempts as needed
-#       return(NA)
-#     }
-#   }
-# }
-# 
-# cleaned_data <- trash_df |>
-#   mutate(cleaned_date = sapply(, clean_date))
-
-```
-
 
 **Dataset_2 - Professor Trash Wheel:**
 
@@ -152,7 +126,7 @@ Function to clean inconsistent date format:
 
 ```{r}
 prof_df = 
-  read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = 2, range = "A2:M94") |> 
+  read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = 2, range = "A2:M96") |> 
   janitor::clean_names() |> 
   drop_na(dumpster) |> 
   mutate(homes_powered_new = weight_tons*500/30) 
@@ -177,41 +151,176 @@ Tidy:
 ```{r}
 trash_df = 
   trash_df |> 
-  mutate(dumpster = "Mr.Trash") |> # dumpster_Mr_Trash = c(1:nrow(trash_df)-1)
-  select(-c(month, year, homes_powered)) |> 
+  mutate(name = "Mr.Trash") |> # dumpster_Mr_Trash = c(1:nrow(trash_df)-1)
+  select(-c(homes_powered)) |> 
   mutate(date = as.character(date)) |> 
-  relocate(dumpster)
+  mutate(year = as.character(year)) |> 
+  relocate(name, dumpster)
 ```
 
 ```{r}
 prof_df =
   prof_df |> 
-  mutate(dumpster = "Prof.Trash") |> 
-  select(-c(month, year, homes_powered)) |> 
+  mutate(name = "Prof.Trash") |> 
+  select(-c(homes_powered)) |> 
   mutate(date = as.character(date)) |> 
-  relocate(dumpster)
+  mutate(year = as.character(year)) |> 
+  relocate(name, dumpster)
 ```
 
 ```{r}
 gwyn_df =
   gwyn_df |> 
-  mutate(dumpster = "Gwynnda_Trash") |> 
-  select(-c(month, year, homes_powered))|> 
+  mutate(name = "Gwynnda_Trash") |> 
+  select(-c(homes_powered))|> 
   mutate(date = as.character(date)) |> 
-  relocate(dumpster)
+  mutate(year = as.character(year)) |>   
+  relocate(name, dumpster)
 ```
 
 Combination:
 ```{r}
 prob2_df = 
   trash_df |> 
-  full_join(prof_df, by = c("dumpster","date","chip_bags","glass_bottles","grocery_bags", "weight_tons","volume_cubic_yards", "plastic_bottles", "polystyrene","cigarette_butts", "homes_powered_new")) |> 
-  full_join(gwyn_df, by = c("dumpster","date", "weight_tons","volume_cubic_yards", "plastic_bottles", "polystyrene","cigarette_butts","homes_powered_new")) |> 
+  full_join(prof_df, by = c("name","dumpster","year","month","date","chip_bags","glass_bottles","grocery_bags", "weight_tons","volume_cubic_yards", "plastic_bottles", "polystyrene","cigarette_butts", "homes_powered_new")) |> 
+  full_join(gwyn_df, by = c("name","dumpster","year","month","date", "weight_tons","volume_cubic_yards", "plastic_bottles", "polystyrene","cigarette_butts","homes_powered_new")) |> 
   mutate(date = as.Date(date, "%Y-%m-%d")) |> 
   arrange(date) |> 
-  relocate(dumpster) 
+  relocate(name, dumpster) 
 ```
 
 **Data Description:**
 
-* **prob2_df** contains  `r nrow(prob2_df)` observations and `r ncol(prob2_df)` variables. Its key variables are `r colnames(prob2_df)`. The total weight of trash collected by Professor Trash Wheel are `r sum(prof_df$homes_powered_new)`. The total number of cigarette butts collected by Gwynnda in July of 2021 is `r if(gwyn_df$date == filter(between(gwyn_df$date, as.Date('2021-07-01'), as.Date('2021-07-31')))){sum(cigarette_butts)}`
+* **prob2_df** contains `r nrow(prob2_df)` observations and `r ncol(prob2_df)` variables. Its key variables are *`r colnames(prob2_df)`*. The total weight of trash collected by Professor Trash Wheel are `r sum(prof_df$homes_powered_new)`. The total number of cigarette butts collected by Gwynnda in July of 2021 is `r prob2_df |> filter(month == "July" & year == "2021" & name == "Gwynnda_Trash")  |> pull(cigarette_butts) |> sum()`
+
+
+
+## Problem 3
+
+1. `MCI_baseline` data:
+
+* Import and tidy data: Factorize sex and change it to a binary variable:
+```{r}
+
+base_df = 
+  read_csv("data/MCI_baseline.csv", skip = 1) |> 
+  janitor::clean_names() |> 
+  mutate(
+    sex = 
+      case_match(
+      sex,
+      1 ~ "male",
+      0 ~ "female"), 
+    sex = as.factor(sex)) |> 
+  mutate(
+    apoe4 = 
+      case_match(
+      apoe4,
+      1 ~ "yes",
+      0 ~ "no"), 
+    sex = as.factor(sex)) 
+```
+
+**Filter:** Participants whose age of onset were before baseline time: 
+```{r}
+  not_free_df = base_df |> filter(age_at_onset != "." & current_age > age_at_onset) 
+  not_free_df
+```
+Delete them in baseline dataset:
+```{r}
+  base_tidy_df = base_df  |> filter(!base_df$id %in% not_free_df$id)
+```
+
+
+
+
+
+
+**Data Pre-processing:**
+
+* Step 1: Transformed binary variable of `sex` and `apoe4` to character variables.
+
+* Step 2: Filtered participant who are free of MCI values in `age_at_onset`.
+
+**Features of dataset `base_df`:**
+
+* `base_df` dataset contains `r read_csv("data/MCI_baseline.csv", skip = 1) |> ncol()` key variables, including *`r read_csv("data/MCI_baseline.csv", skip = 1) |> janitor::clean_names() |> colnames()`*. 
+
+* There are `r read_csv("data/MCI_baseline.csv", skip = 1) |> nrow()` participants were recruited, and of these `r read_csv("data/MCI_baseline.csv", skip = 1) |> janitor::clean_names() |> filter(age_at_onset != "." ) |> nrow()` develop MCI. 
+
+* The average baseline age is `r read_csv("data/MCI_baseline.csv", skip = 1) |> janitor::clean_names() |> pull(current_age)  |> mean()`. 
+
+* The proportion of women in the study are APOE4 carriers: `r base_tidy_df |> filter(sex == "female" & apoe4 == "yes")|> nrow() / base_tidy_df |> filter(sex == "female") |> nrow()`, 
+
+II. Import, clean and tidy `mci_amyloid` data:
+
+* Change error character type "Na" values into NA type.
+
+* Modify `study_id` to `id` to ensure naming consistency.
+```{r}
+amy_df = 
+  read_csv("data/mci_amyloid.csv", skip = 1) |> 
+  janitor::clean_names() |> 
+  mutate( 
+    baseline = replace(baseline, baseline == "Na", NA)
+  )|> 
+   mutate( 
+    time_2 = replace(time_2, time_2 == "Na", NA)
+  ) |> 
+  mutate( 
+    time_4 = replace(time_4, time_4 == "Na", NA)
+  ) |> 
+  mutate( 
+    time_6 = replace(time_6, time_6 == "Na", NA)
+  ) |> 
+  mutate( 
+    time_8 = replace(time_8, time_8 == "Na", NA)
+  ) |> 
+  mutate(id = study_id) |> 
+  select(-study_id) |> 
+  relocate(id)
+```
+
+**Fix a problem:** As time_# is speading across five columns, which corresponding to five observation times, we should fix it using `pivot_longer`:
+
+```{r}
+amy_tidy_data = 
+  pivot_longer(
+    amy_df,
+    baseline:time_8,
+    names_to = "time_length",
+    values_to = "time_value"
+  )
+```
+
+**`amy_tidy_data`** is a `r amy_tidy_data |> nrow()` *  `r amy_tidy_data |> ncol()` dataframe, containing `r amy_tidy_data |> ncol()` key variables, including *`r amy_tidy_data |> colnames()`.*
+
+3. Check participants only aopear in the baseline or amyloid datasets:
+
+```{r}
+
+only_in_base = setdiff(base_df$id, amy_tidy_data$id)
+only_in_base 
+```
+The participants `r only_in_base ` only appeared in the baseline data probably because they decided to move to a new location from which they cannot easily reach the study center.
+```{r}
+only_in_amyloid = setdiff(amy_tidy_data$id, base_df$id)
+only_in_amyloid
+```
+The participants `r only_in_amyloid` only appeared in the amyloid data probably because they entered the study after few time from the baseline time.
+
+```{r}
+prob3_df = inner_join(base_df, amy_tidy_data, by = "id")
+```
+**Describing resulting data:**
+
+* The resulting dataframe **prob3_df** has `r nrow(prob3_df)` observations with `r ncol(prob3_df)`
+ variables, which includes *`r colnames(prob3_df)`*.
+
+4. Export data into data directory:
+
+```{r}
+file_path = file.path("data", "MCI_Onset_Records.csv")
+write.csv(prob3_df, file = file_path, row.names = TRUE)
+```
+
