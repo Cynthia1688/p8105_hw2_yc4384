@@ -9,7 +9,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(dplyr)
 library(lubridate)
@@ -230,9 +230,6 @@ Delete them in baseline dataset:
 ```{r}
   base_tidy_df = base_df  |> filter(!base_df$id %in% not_free_df$id)
 ```
-
-
-
 
 
 
