@@ -87,13 +87,13 @@ pols_df |>
   left_join(unemploy_df, by = c("year", "month"))
 
 ```
-* **`pols_df`** contains `r nrow(pols_df) - 1` observations and 'r ncol(pols_df)' variables, decribing the number of national politicians who are democratic or republican at any given time.
+* **`pols_df`** contains `r nrow(pols_df)` observations and 'r ncol(pols_df)' variables, decribing the number of national politicians who are democratic or republican at any given time.
 
-* **snp_df** contains `r nrow(snp_df) - 1` observations and 'r ncol(snp_df)' variables, describing Standard & Poor’s stock market index (S&P), often used as a representative measure of stock market as a whole.
+* **snp_df** contains `r nrow(snp_df)` observations and 'r ncol(snp_df)' variables, describing Standard & Poor’s stock market index (S&P), often used as a representative measure of stock market as a whole.
 
-* **unemploy_df** contains `r nrow(unemploy_df) - 1` observations and 'r ncol(unemploy_df)' variables, describing the percentage of unemployment in each month of the associated year.
+* **unemploy_df** contains `r nrow(unemploy_df)` observations and 'r ncol(unemploy_df)' variables, describing the percentage of unemployment in each month of the associated year.
 
-* **prob1_df** is the `r dim(prob1_df)[1]` * `r dim(prob1_df)[2]` dimention result dataset, which contains  `r nrow(prob1_df) - 1` observations and `r ncol(prob1_df) - 1` variables. It ranges from `r range(prob1_df$year)[1]` to  `r range(prob1_df$year)[2]`. It's variable conbined all key variables in **`pols_df`**, **snp_df** and **unemploy_df** datasets. including *`r colnames(prob1_df)`.* 
+* **prob1_df** is the `r dim(prob1_df)[1]` * `r dim(prob1_df)[2]` dimention result dataset, which contains  `r nrow(prob1_df)` observations and `r ncol(prob1_df)` variables. It ranges from `r range(prob1_df$year)[1]` to  `r range(prob1_df$year)[2]`. It's variable conbined all key variables in **`pols_df`**, **snp_df** and **unemploy_df** datasets. including *`r colnames(prob1_df)`.* 
 
 
 ## Problem 2
