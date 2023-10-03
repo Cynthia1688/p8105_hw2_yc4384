@@ -31,7 +31,7 @@ pols_df =
   janitor::clean_names() |> 
   separate(mon, into = c("year", "month", "day")) |> 
   mutate(month = month.abb[as.numeric(month)]) |> 
-  mutate(president  = gov_dem) |> 
+  mutate(president = gov_dem) |> 
   select(-c(prez_dem,prez_gop)) |> 
   select(-day) 
 ```
@@ -87,13 +87,13 @@ pols_df |>
   left_join(unemploy_df, by = c("year", "month"))
 
 ```
-* **`pols_df`** contains `r nrow(pols_df)` observations and 'r ncol(pols_df)' variables, decribing the number of national politicians who are democratic or republican at any given time.
+* **`pols_df`** contains `r nrow(pols_df)` observations and `r ncol(pols_df)` variables, describing the number of national politicians who are democratic or republican at any given time.
 
-* **snp_df** contains `r nrow(snp_df)` observations and 'r ncol(snp_df)' variables, describing Standard & Poor’s stock market index (S&P), often used as a representative measure of stock market as a whole.
+* **snp_df** contains `r nrow(snp_df)` observations and `r ncol(snp_df)` variables, describing Standard & Poor’s stock market index (S&P), often used as a representative measure of stock market as a whole.
 
-* **unemploy_df** contains `r nrow(unemploy_df)` observations and 'r ncol(unemploy_df)' variables, describing the percentage of unemployment in each month of the associated year.
+* **unemploy_df** contains `r nrow(unemploy_df)` observations and `r ncol(unemploy_df)` variables, describing the percentage of unemployment in each month of the associated year.
 
-* **prob1_df** is the `r dim(prob1_df)[1]` * `r dim(prob1_df)[2]` dimention result dataset, which contains  `r nrow(prob1_df)` observations and `r ncol(prob1_df)` variables. It ranges from `r range(prob1_df$year)[1]` to  `r range(prob1_df$year)[2]`. It's variable conbined all key variables in **`pols_df`**, **snp_df** and **unemploy_df** datasets. including *`r colnames(prob1_df)`.* 
+* **prob1_df** is the `r dim(prob1_df)[1]` * `r dim(prob1_df)[2]` dimension result dataset, which contains `r nrow(prob1_df)` observations and `r ncol(prob1_df)` variables. It ranges from `r range(prob1_df$year)[1]` to  `r range(prob1_df$year)[2]`. It's variable combined all key variables in **`pols_df`**, **snp_df** and **unemploy_df** datasets, including *`r colnames(prob1_df)`.* 
 
 
 ## Problem 2
@@ -307,7 +307,7 @@ only_in_amyloid
 The participants `r only_in_amyloid` only appeared in the amyloid data probably because they entered the study after few time from the baseline time.
 
 ```{r}
-prob3_df = inner_join(base_df, amy_tidy_data, by = "id")
+prob3_df = inner_join(base_tidy_df, amy_tidy_data, by = "id")
 ```
 **Describing resulting data:**
 
