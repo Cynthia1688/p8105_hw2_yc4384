@@ -191,7 +191,7 @@ prob2_df =
 
 **Data Description:**
 
-* **prob2_df** contains `r nrow(prob2_df)` observations and `r ncol(prob2_df)` variables. Its key variables are *`r colnames(prob2_df)`*. The total weight of trash collected by Professor Trash Wheel are `r sum(prof_df$homes_powered_new)`. The total number of cigarette butts collected by Gwynnda in July of 2021 is `r prob2_df |> filter(month == "July" & year == "2021" & name == "Gwynnda_Trash")  |> pull(cigarette_butts) |> sum()`
+* **prob2_df** contains `r nrow(prob2_df)` observations and `r ncol(prob2_df)` variables. Its key variables are *`r colnames(prob2_df)`*. The total weight of trash collected by Professor Trash Wheel are `r sum(prof_df$weight_tons)`. The total number of cigarette butts collected by Gwynnda in July of 2021 is `r prob2_df |> filter(month == "July" & year == "2021" & name == "Gwynnda_Trash")  |> pull(cigarette_butts) |> sum()`
 
 
 
