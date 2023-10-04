@@ -223,7 +223,7 @@ base_df =
 
 **Filter:** Participants whose age of onset were before baseline time: 
 ```{r}
-  not_free_df = base_df |> filter(age_at_onset != "." & current_age > age_at_onset) 
+  not_free_df = base_df |> filter(age_at_onset != "." & current_age >= age_at_onset) 
   not_free_df
 ```
 Delete them in baseline dataset:
@@ -245,7 +245,7 @@ Delete them in baseline dataset:
 
 * There are `r read_csv("data/MCI_baseline.csv", skip = 1) |> nrow()` participants were recruited, and of these `r read_csv("data/MCI_baseline.csv", skip = 1) |> janitor::clean_names() |> filter(age_at_onset != "." ) |> nrow()` develop MCI. 
 
-* The average baseline age is `r read_csv("data/MCI_baseline.csv", skip = 1) |> janitor::clean_names() |> pull(current_age)  |> mean()`. 
+* The average baseline age is `r base_tidy_df |> pull(current_age)  |> mean()`. 
 
 * The proportion of women in the study are APOE4 carriers: `r base_tidy_df |> filter(sex == "female" & apoe4 == "yes")|> nrow() / base_tidy_df |> filter(sex == "female") |> nrow()`, 
 
@@ -320,4 +320,5 @@ prob3_df = inner_join(base_tidy_df, amy_tidy_data, by = "id")
 file_path = file.path("data", "MCI_Onset_Records.csv")
 write.csv(prob3_df, file = file_path, row.names = TRUE)
 ```
+
 
